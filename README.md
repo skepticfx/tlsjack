@@ -1,7 +1,7 @@
 TLSJack
 =======
 
-A simple TLS proxy that lets you intercept traffic and play with them.
+A simple TLS forwarder that lets you intercept traffic and play with them.
 
 
 Its available via npm
@@ -66,7 +66,7 @@ function str_replace(data){
 
 
 ```
-Refer the ** *exmaples* ** folder, for more real world use cases.
+Refer the **exmaples** folder, for more real world use cases.
 ### Features
 #### Server Name Indication (SNI)
   * Implicitly supports SNI, by forwarding client's request to the approriate server using the servername in Client Hello.
