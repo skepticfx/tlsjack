@@ -1,0 +1,32 @@
+{
+  "name": "tlsjack",
+  "version": "0.1.0",
+  "description": "A simple TLS proxy that lets you intercept traffic and play with them.",
+  "main": "index.js",
+  "bin": {
+    "tlsjack": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tls",
+    "jack",
+    "connections",
+    "tlsjack",
+    "hijack",
+    "intercept",
+    "proxy",
+    "ssl",
+    "terminator",
+    "tls"
+  ],
+  "dependencies": {
+    "node-xstream": "*",
+    "commander": "*",
+    "colors": "*"
+  },
+  "preferGlobal": "true",
+  "author": "Ahamed Nafeez <ahamed.nafeez@gmail.com> (http://blog.skepticfx.com/)",
+  "license": "MIT"
+}
