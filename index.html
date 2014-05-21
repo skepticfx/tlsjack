@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>TLSJack by skepticfx</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>TLSJack</h1>
+        <p>A simple TLS forwarder that lets you intercept traffic and play with them.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/skepticfx/TLSJack" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/skepticfx/TLSJack/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/skepticfx/TLSJack/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
+<a name="tlsjack" class="anchor" href="#tlsjack"><span class="octicon octicon-link"></span></a>TLSJack</h1>
+
+<p>A simple TLS forwarder that lets you intercept traffic and play with them.</p>
+
+<p>Its available via npm</p>
+
+<p><code>npm install -g tlsjack</code></p>
+
+<h3>
+<a name="passively-monitor-data" class="anchor" href="#passively-monitor-data"><span class="octicon octicon-link"></span></a>Passively monitor data</h3>
+
+<pre><code># tlsjack
+TLSJack listeing on port: 443
+</code></pre>
+
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<pre><code># tlsjack --help
+
+  Usage: tlsjack [options]
+
+  Options:
+
+    -h, --help                output usage information
+    -V, --version             output the version number
+    -l, --listen &lt;port&gt;       TLS port to listen on. Defaults to 443
+    -w, --logfile &lt;filename&gt;  Log requests to a file
+
+</code></pre>
+
+<h5>
+<a name="listen-on-port-1531-and-log-requests-to-a-file" class="anchor" href="#listen-on-port-1531-and-log-requests-to-a-file"><span class="octicon octicon-link"></span></a>Listen on port 1531 and Log requests to a file</h5>
+
+<pre><code># tlsjack --listen 1531 --logfile example.txt
+
+Logging to: example.txt
+TLSJack listeing on port: 1531
+</code></pre>
+
+<h3>
+<a name="what-does-it-do" class="anchor" href="#what-does-it-do"><span class="octicon octicon-link"></span></a>What does it do?</h3>
+
+<ul>
+<li>Creates an SSL Server on port 443.</li>
+<li>A Client's DNS entry is spoofed so example.com for instance, redirects to this machine. (use <a href="https://github.com/mafintosh/dnsjack">dnjack</a> or <a href="https://github.com/feross/hostile">hostile</a>)</li>
+<li>Terminates the TLS connection and streams the data in plaintext to be logged, intercepted or modified as needed.</li>
+<li>Completes the connection with google.com, by creating another SSL connection. Thus acting like a forward proxy.</li>
+<li>This is a Bi-Directional tunnel and data can flow in both directions.</li>
+<li>This leverages the power of awesome <code>streams</code> api in nodejs.</li>
+</ul><h3>
+<a name="programmatic-injection" class="anchor" href="#programmatic-injection"><span class="octicon octicon-link"></span></a>Programmatic Injection</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">Tlsjack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'tlsjack'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">jack</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Tlsjack</span><span class="p">();</span>
+
+<span class="c1">// Tlsjack has its own key pair for TLS connections.</span>
+
+<span class="nx">jack</span>
+  <span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">443</span><span class="p">)</span> <span class="c1">// Listen on port '443'</span>
+  <span class="p">.</span><span class="nx">logRequest</span><span class="p">()</span> <span class="c1">// Log Requests</span>
+  <span class="p">.</span><span class="nx">logInfo</span><span class="p">()</span> <span class="c1">// Log Connection Information</span>
+  <span class="p">.</span><span class="nx">responseHook</span><span class="p">(</span><span class="nx">str_replace</span><span class="p">)</span> <span class="c1">// Hook responses using custom function</span>
+  <span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">tlsOptions</span><span class="p">);</span>
+
+<span class="c1">// Replace all the instances of the keyword, 'the' with the word 'nodejs'</span>
+<span class="kd">function</span> <span class="nx">str_replace</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/the/gi</span><span class="p">,</span> <span class="s1">'nodejs'</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+</pre></div>
+
+<p>Refer the <strong>exmaples</strong> folder, for more real world use cases.</p>
+
+<h3>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<h4>
+<a name="server-name-indication-sni" class="anchor" href="#server-name-indication-sni"><span class="octicon octicon-link"></span></a>Server Name Indication (SNI)</h4>
+
+<ul>
+<li>Implicitly supports SNI, by forwarding client's request to the approriate server using the servername in Client Hello.</li>
+<li>To specifically serve a custom server certificate for a given server name, say example.com. Just place the public and private keys under a folder named 'certs'.</li>
+<li>Public Certificate(.cert) - <code>certs/example.com.cert</code>
+</li>
+<li>Private Key(.key) - <code>certs/example.com.key</code>
+</li>
+</ul><h3>
+<a name="options-supported" class="anchor" href="#options-supported"><span class="octicon octicon-link"></span></a>Options Supported</h3>
+
+<ul>
+<li>
+<strong>listen(port)</strong> - Spawns TLSJack on the given port. Defaults to 443</li>
+<li>
+<strong>start(TLSOptions)</strong> - Starts the TLSJack daemon. (Required)
+<code>TLSOptions</code> is the options required to start the TLS Server. See (here)[<a href="http://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener">http://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener</a>] for more.</li>
+<li>
+<strong>forward(host, [port])</strong> - Forwards the connection to a given host and port(defaults to 443), regardless
+ of the SNI in the request.</li>
+<li>
+<p><strong>requestHook(custom_function)</strong> - Intercept and modify request data on the fly using a custom function.</p>
+
+<p><code>custom_function</code> will be passed a <code>data</code> argument, which
+  can be modified and returned. It must return a <code>string</code> always. You can define it as something like this,</p>
+
+<div class="highlight highlight-javascript"><pre>  <span class="kd">function</span> <span class="nx">custom_function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+    <span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/GET/</span><span class="p">,</span> <span class="s1">'PUT'</span><span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+
+<p>This is will turn all <code>GET</code> requests to a <code>PUT</code> request.</p>
+</li>
+<li>
+<strong>responseHook(custom_function)</strong> - Similar to <code>requestHook</code> but for responses.</li>
+<li>
+<strong>logRequest()</strong> - Logs all requests.</li>
+<li>
+<strong>logResponse()</strong> - Logs all responses.</li>
+<li>
+<strong>enableLogs()</strong> - Enable all types of logging.</li>
+<li>
+<strong>disableLogs()</strong> - Disable all types of logging.</li>
+<li>
+<strong>setLogger(custom_function)</strong> - Define a custom logger for logging data. It must always return the original <code>data</code>.</li>
+</ul><h3>
+<a name="todo--future" class="anchor" href="#todo--future"><span class="octicon octicon-link"></span></a>TODO / Future</h3>
+
+<ul>
+<li>Write test cases.</li>
+<li>Write real world examples under /examples.</li>
+<li>Enable client cert authentication.</li>
+<li>Enable socat style redirection to other streams / pipes.</li>
+<li>Option to change the default key pair.</li>
+<li>Add HTTP request/response parser.</li>
+<li>Remove the ugly gzip header removal hack.</li>
+<li>Write android https tampering documentation.</li>
+</ul><h3>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2014 Ahamed Nafeez</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/skepticfx">skepticfx</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
