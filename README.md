@@ -26,6 +26,7 @@ TLSJack listeing on port: 443
     -V, --version             output the version number
     -l, --listen <port>       TLS port to listen on. Defaults to 443
     -w, --logfile <filename>  Log requests to a file
+    -f, --forward <filename>  Forward all requests to a specific host
 
 ```
 ##### Listen on port 1531 and Log requests to a file

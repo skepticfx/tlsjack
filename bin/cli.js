@@ -6,7 +6,7 @@ var fs = require('fs');
 var program = require('commander');
 
 program
-  .version('0.1.1')
+  .version('0.1.3')
   .option('-l, --listen <port>', 'TLS port to listen on. Defaults to 443', parseInt)
   .option('-w, --logfile <filename>', 'Log requests to a file', String)
   .option('-f, --forward <filename>', 'Forward all requests to a specific host', String)
