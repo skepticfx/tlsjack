@@ -119,11 +119,10 @@ return this;
 
 Tlsjack.prototype.start = function(opts, callback){
   var that = this;
-
-  // Parse Options passed.
-  /*if(opts === null || typeof opts === 'undefined')
-    opts = {};*/
-
+  if(opts == null){
+    opts = {};
+  }
+  
   function Options(){
     this.key = defaultKey;
     this.cert = defaultCert;
@@ -165,6 +164,19 @@ Tlsjack.prototype.start = function(opts, callback){
     if(!that.customForwarding)
       that.forwardHost = clearStream.servername;
     var forwardSocket = tls.connect(that.forwardPort, that.forwardHost, function(){
+
+      forwardSocket.on('error', function(err){
+        console.log('Forward Socket Error: ' + err);
+      })
+
+      server.on('error', function(err){
+        console.log('Original Socket Error: ' + err);
+      })
+
+      process.on('uncaughtException', function(err) {
+        console.log('Caught exception: ' + err);
+      });
+
       if(that.isLogInfo)
         console.log('Forwarding to '.debug + that.forwardHost);
       // Pipeline the send and recieve streams.

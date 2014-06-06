@@ -1,6 +1,6 @@
 {
   "name": "tlsjack",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A simple TLS forwarder that lets you intercept traffic and play with them.",
   "main": "index.js",
   "bin": {
