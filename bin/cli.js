@@ -41,12 +41,18 @@ var tlsOptions = {
   ciphers: 'ALL:!LOW:!DSS:!EXP'
 };
 
+// Replace all the instances of the keyword, 'the' with the word 'nodejs'
+function str_replace(data){
+  return new Buffer(data.toString().replace(/the/gi, 'nodejs'));
+}
+
 tlsjack =
   tlsjack
     .listen(program.listen || 443)
     .logInfo()
     .logRequest()
-    .logResponse();
+    .logResponse()
+    .responseHook(str_replace);
 
 if(program.logfile){
   tlsjack =
@@ -56,7 +62,7 @@ if(program.logfile){
       .writeLogs(program.logfile || "")
       // Strip Non-Printable characters while logging
       .setLogger(function(data){
-        print_safe(data);
+        print_safe(data.toString());
       return data;
       });
 }

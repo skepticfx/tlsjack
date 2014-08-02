@@ -61,7 +61,7 @@ return this;
 }
 
 Tlsjack.prototype.logger = function(data){
-  console.log(data);
+  console.log(data.toString());
 return data;
 }
 
@@ -122,7 +122,7 @@ Tlsjack.prototype.start = function(opts, callback){
   if(opts == null){
     opts = {};
   }
-  
+
   function Options(){
     this.key = defaultKey;
     this.cert = defaultCert;
@@ -149,7 +149,7 @@ Tlsjack.prototype.start = function(opts, callback){
     logFile.write("\t\tTLSJack Logs\n");
     logFile.write("---------------------------------------------------------------------------------\n");
     writeFile = function(data){
-      logFile.write(data);
+      logFile.write(data.toString());
     return data;
     }
   }
@@ -192,14 +192,15 @@ Tlsjack.prototype.start = function(opts, callback){
         send = send.pipe(Xstream.hook(that.reqh));
       send = send.pipe(forwardSocket);
 
+      // Do not log img responses
       var receive = forwardSocket;
       if(that.isLogResponse){
-        receive = receive.pipe(Xstream.hook(that.logger));
+        receive = receive.pipe(Xstream.hookBuffer(that.logger));
         if(that.isWritelogs)
-          receive = receive.pipe(Xstream.hook(writeFile));
+          receive = receive.pipe(Xstream.hookBuffer(writeFile));
       }
       if(typeof that.resh == 'function')
-        receive = receive.pipe(Xstream.hook(that.resh));
+        receive = receive.pipe(Xstream.hookBuffer(that.resh));
       receive = receive.pipe(clearStream);
     });
 

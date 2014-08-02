@@ -62,7 +62,7 @@ jack
 
 // Replace all the instances of the keyword, 'the' with the word 'nodejs'
 function str_replace(data){
-  return data.toString().replace(/the/gi, 'nodejs');
+  return new Buffer(data.toString().replace(/the/gi, 'nodejs'));
 }
 
 
