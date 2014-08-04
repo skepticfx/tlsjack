@@ -52,7 +52,7 @@ tlsjack =
     .logInfo()
     .logRequest()
     .logResponse()
-    .responseHook(str_replace);
+    //.responseHook(str_replace);
 
 if(program.logfile){
   tlsjack =
