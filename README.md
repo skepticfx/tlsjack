@@ -8,6 +8,9 @@ Its available via npm
 
 `npm install -g tlsjack`
 
+### Pre-requisite
+The Client's DNS entry is spoofed so that the target server, redirects to this machine. (use [dnjack](https://github.com/mafintosh/dnsjack) or [hostile](https://github.com/feross/hostile))
+
 ### Passively monitor data
 ```
 # tlsjack
@@ -40,7 +43,6 @@ TLSJack listeing on port: 1531
 
 ### What does it do?
  - Creates an SSL Server on port 443.
- - A Client's DNS entry is spoofed so example.com for instance, redirects to this machine. (use [dnjack](https://github.com/mafintosh/dnsjack) or [hostile](https://github.com/feross/hostile))
  - Terminates the TLS connection and streams the data in plaintext to be logged, intercepted or modified as needed.
  - Completes the connection with google.com, by creating another SSL connection. Thus acting like a forward proxy.
  - This is a Bi-Directional tunnel and data can flow in both directions.
