@@ -95,13 +95,13 @@ return this;
 }
 
 Tlsjack.prototype.listen = function(port){
-  this.listenPort = port | this.listenPort;
+  this.listenPort = port || this.listenPort;
 return this;
 }
 
 Tlsjack.prototype.forward = function(host, port){
   this.customForwarding = true;
-  this.forwardPort = port | this.forwardPort;
+  this.forwardPort = port || this.forwardPort;
   if(host === null){  host = 'localhost';}
   this.forwardHost = host;
 return this;
